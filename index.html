@@ -313,12 +313,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             
             // --- FIREBASE CONFIG (Compatibility version) ---
-            // THIS BLOCK IS REPLACED WITH YOUR ACTUAL FIREBASE CONFIG
             const firebaseConfig = {
               apiKey: "AIzaSyA_ZmP3k0wob6jqoEV-k0KP1NjD2zKN5Ds",
               authDomain: "cmar-4866b.firebaseapp.com",
               projectId: "cmar-4866b",
-              storageBucket: "cmar-4866b.firebasestorage.app",
+              storageBucket: "cmar-4866b.appspot.com",
               messagingSenderId: "481963120706",
               appId: "1:481963120706:web:42a8712b0fa153b12d75db"
             };
@@ -350,10 +349,35 @@
                         loadAssessments(); // Load data once authenticated
                     } else {
                          try {
-                            // No need for initial auth token, just sign in anonymously
                             await auth.signInAnonymously();
                         } catch (error) {
                             console.error("Anonymous Authentication Error:", error);
+                            const pageContainer = document.getElementById('page-assessment');
+                            const navContainer = document.querySelector('nav');
+                            if (error.code && (error.code === 'auth/network-request-failed' || error.message.includes('PERMISSION_DENIED'))) {
+                                const blockedReferrer = window.location.hostname || 'O seu site atual';
+                                if(navContainer) navContainer.style.display = 'none';
+                                pageContainer.innerHTML = `
+                                    <div class="card p-6 mb-8 bg-red-50 border border-red-200">
+                                        <h2 class="text-2xl font-bold text-red-700 flex items-center gap-2">
+                                            <svg class="w-8 h-8"><use xlink:href="#icon-alert-triangle"></use></svg>
+                                            Erro de Ligação à Base de Dados (Acesso Bloqueado)
+                                        </h2>
+                                        <p class="mt-4 text-red-800">A sua base de dados (Firebase) está a bloquear o acesso a partir deste site por segurança.</p>
+                                        <p class="mt-4 font-bold text-red-900">Para resolver, precisa de autorizar este site:</p>
+                                        <ol class="list-decimal list-inside mt-2 text-red-800 space-y-2">
+                                            <li>Vá à <a href="https://console.cloud.google.com/apis/credentials" target="_blank" class="underline text-blue-600 font-semibold">Google Cloud Console</a>.</li>
+                                            <li>No topo da página, verifique se o projeto <strong>cmar-4866b</strong> está selecionado.</li>
+                                            <li>Na lista de "Chaves de API", encontre a que diz <strong>Browser key (auto created by Firebase)</strong> e clique no ícone do lápis (Editar).</li>
+                                            <li>Na secção "Restrições de sites", clique em <strong>"ADICIONAR"</strong>.</li>
+                                            <li>Na caixa que aparece, cole o seguinte endereço: <br> <strong class="bg-red-100 p-1 rounded font-mono text-sm">${blockedReferrer}</strong></li>
+                                            <li>Clique em <strong>"Guardar"</strong> no final da página.</li>
+                                        </ol>
+                                        <p class="mt-4 text-sm text-red-600"><strong>Nota:</strong> Após guardar, pode demorar alguns minutos para a alteração ter efeito. Por favor, atualize a página passado um bocado.</p>
+                                    </div>
+                                `;
+                                pageContainer.style.display = 'block';
+                            }
                         }
                     }
                 });
@@ -528,8 +552,7 @@
                 const overallClassification = getRiskClassification(highestRiskScore);
                 const assessmentData = { ...generalInfo, createdAt: new Date().toISOString(), overallRiskLevel: overallClassification.level, overallRecommendation: overallClassification.recommendation, factors: evaluatedFactors, };
                 try {
-                    // Use a public path that doesn't depend on userId
-                    await db.collection(`cmar_assessments`).add(assessmentData);
+                    await db.collection(`cmar_assessments_public`).add(assessmentData);
                     saveStatusEl.textContent = "Avaliação guardada com sucesso!";
                     saveStatusEl.className = "mt-4 text-green-600 font-semibold";
                     setTimeout(() => { saveStatusEl.textContent = ""; }, 3000);
@@ -544,8 +567,7 @@
 
             function loadAssessments() {
                 if (!db) return;
-                // Use a public path that doesn't depend on userId
-                db.collection(`cmar_assessments`).orderBy("createdAt", "desc").onSnapshot((querySnapshot) => {
+                db.collection(`cmar_assessments_public`).orderBy("createdAt", "desc").onSnapshot((querySnapshot) => {
                     allAssessments = [];
                     querySnapshot.forEach((doc) => { allAssessments.push({ id: doc.id, ...doc.data() }); });
                     applyFilters();
@@ -679,3 +701,4 @@
     </script>
 </body>
 </html>
+
