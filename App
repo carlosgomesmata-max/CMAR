@@ -313,12 +313,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             
             // --- FIREBASE CONFIG (Compatibility version) ---
-            // THIS BLOCK IS REPLACED WITH YOUR ACTUAL FIREBASE CONFIG
             const firebaseConfig = {
               apiKey: "AIzaSyA_ZmP3k0wob6jqoEV-k0KP1NjD2zKN5Ds",
               authDomain: "cmar-4866b.firebaseapp.com",
               projectId: "cmar-4866b",
-              storageBucket: "cmar-4866b.firebasestorage.app",
+              storageBucket: "cmar-4866b.appspot.com",
               messagingSenderId: "481963120706",
               appId: "1:481963120706:web:42a8712b0fa153b12d75db"
             };
@@ -350,7 +349,6 @@
                         loadAssessments(); // Load data once authenticated
                     } else {
                          try {
-                            // No need for initial auth token, just sign in anonymously
                             await auth.signInAnonymously();
                         } catch (error) {
                             console.error("Anonymous Authentication Error:", error);
@@ -528,8 +526,7 @@
                 const overallClassification = getRiskClassification(highestRiskScore);
                 const assessmentData = { ...generalInfo, createdAt: new Date().toISOString(), overallRiskLevel: overallClassification.level, overallRecommendation: overallClassification.recommendation, factors: evaluatedFactors, };
                 try {
-                    // Use a public path that doesn't depend on userId
-                    await db.collection(`cmar_assessments`).add(assessmentData);
+                    await db.collection(`cmar_assessments_public`).add(assessmentData);
                     saveStatusEl.textContent = "Avaliação guardada com sucesso!";
                     saveStatusEl.className = "mt-4 text-green-600 font-semibold";
                     setTimeout(() => { saveStatusEl.textContent = ""; }, 3000);
@@ -544,8 +541,7 @@
 
             function loadAssessments() {
                 if (!db) return;
-                // Use a public path that doesn't depend on userId
-                db.collection(`cmar_assessments`).orderBy("createdAt", "desc").onSnapshot((querySnapshot) => {
+                db.collection(`cmar_assessments_public`).orderBy("createdAt", "desc").onSnapshot((querySnapshot) => {
                     allAssessments = [];
                     querySnapshot.forEach((doc) => { allAssessments.push({ id: doc.id, ...doc.data() }); });
                     applyFilters();
@@ -679,4 +675,3 @@
     </script>
 </body>
 </html>
-
