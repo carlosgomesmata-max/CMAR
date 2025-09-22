@@ -25,48 +25,31 @@
 
     <!-- Firebase SDK (Modular v11+) -->
     <script type="module">
-        // These global variables are expected to be provided by the environment.
-        // They are mocked here for standalone testing.
-        if (typeof __app_id === 'undefined') {
-            window.__app_id = 'cmar-app-standalone';
-        }
-        if (typeof __firebase_config === 'undefined') {
+        // This block provides the Firebase configuration. Since the app is on GitHub Pages,
+        // it uses this hardcoded configuration directly.
+        if (typeof window.__firebase_config === 'undefined') {
             window.__firebase_config = JSON.stringify({
+                // --- CONFIGURAÇÃO CORRIGIDA ---
                 apiKey: "AIzaSyA_ZmP3k0wob6jqoEV-k0KP1NjD2zKN5Ds",
                 authDomain: "cmar-4866b.firebaseapp.com",
                 projectId: "cmar-4866b",
-                storageBucket: "cmar-4866b.appspot.com",
+                storageBucket: "cmar-4866b.appspot.com", // <-- ESTA LINHA FOI CORRIGIDA
                 messagingSenderId: "481963120706",
                 appId: "1:481963120706:web:42a8712b0fa153b12d75db"
             });
         }
-        if (typeof __initial_auth_token === 'undefined') {
-           // No initial token, will sign in anonymously
+        if (typeof window.__app_id === 'undefined') {
+            window.__app_id = 'cmar-app-standalone';
         }
     </script>
 
     <style>
         /* Custom styles to enhance the UI */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-        }
-        .card {
-            background-color: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            transition: box-shadow 0.3s ease-in-out;
-            overflow: hidden; /* Needed for the new header style */
-        }
-        .card:hover {
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .card { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); transition: box-shadow 0.3s ease-in-out; overflow: hidden; }
+        .card:hover { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
         .header-title { color: #111827; }
-        .btn {
-            transition: background-color 0.3s, transform 0.2s;
-            border: none;
-            cursor: pointer;
-        }
+        .btn { transition: background-color 0.3s, transform 0.2s; border: none; cursor: pointer; }
         .btn:hover { transform: translateY(-2px); }
         .btn:disabled { background-color: #9ca3af; cursor: not-allowed; transform: none; }
         .btn-primary { background-color: #3b82f6; color: white; }
@@ -77,19 +60,7 @@
         .btn-danger:hover:not(:disabled) { background-color: #dc2626; }
         .btn-success { background-color: #22c55e; color: white; }
         .btn-success:hover:not(:disabled) { background-color: #16a34a; }
-
-        .risk-score-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 3rem;
-            height: 3rem;
-            border-radius: 50%;
-            font-weight: 700;
-            font-size: 1.25rem;
-        }
-
-        /* Matrix Styles */
+        .risk-score-badge { display: inline-flex; align-items: center; justify-content: center; width: 3rem; height: 3rem; border-radius: 50%; font-weight: 700; font-size: 1.25rem; }
         .risk-matrix-container { display: grid; grid-template-columns: auto 1fr; gap: 0.5rem; align-items: center; }
         .risk-matrix { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; border: 1px solid #d1d5db; border-radius: 0.25rem; padding: 2px; width: 150px; }
         .matrix-cell { aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 500; color: white; cursor: pointer; border-radius: 0.125rem; transition: transform 0.2s, box-shadow 0.2s; }
@@ -97,43 +68,19 @@
         .matrix-cell.selected { border: 2px solid #ffffff; box-shadow: 0 0 0 2px #3b82f6; transform: scale(1.1); z-index: 5; }
         .axis-label { writing-mode: vertical-rl; transform: rotate(180deg); text-align: center; font-size: 0.75rem; font-weight: 600; color: #4b5563; }
         .consequence-labels { grid-column: 2; display: grid; grid-template-columns: repeat(5, 1fr); text-align: center; font-size: 0.75rem; font-weight: 600; color: #4b5563; }
-
-        /* Cell Colors */
         .risk-low { background-color: #22c55e; }
-        .risk-moderate { background-color: #facc15; color: #1f2937 !important; } /* Dark text for yellow bg */
+        .risk-moderate { background-color: #facc15; color: #1f2937 !important; }
         .risk-high { background-color: #f97316; }
         .risk-extreme { background-color: #ef4444; }
-
-        /* Extreme Risk Alert Styles */
         .extreme-risk-alert-row { border: 2px solid #ef4444 !important; background-color: #fef2f2; }
         .extreme-risk-icon { color: #ef4444; display: none; }
         .extreme-risk-alert-row .extreme-risk-icon { display: inline-block; }
-        
-        /* Page Navigation */
         .nav-button { border-bottom: 4px solid transparent; }
         .nav-button.active { border-bottom-color: #3b82f6; color: #3b82f6; }
         .page { display: none; }
         .page.active { display: block; }
-
-        /* Simple Toast Notification */
-        #toast-notification {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 12px 24px;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
-        }
-        #toast-notification.show {
-            opacity: 1;
-            visibility: visible;
-        }
+        #toast-notification { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 12px 24px; border-radius: 8px; color: white; font-weight: 600; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+        #toast-notification.show { opacity: 1; visibility: visible; }
     </style>
 </head>
 <body class="antialiased text-gray-800">
@@ -270,49 +217,29 @@
     <div id="toast-notification"></div>
     
     <script type="module">
-        // --- FIREBASE 11+ MODULAR SDK IMPORTS ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-
-        // --- APPLICATION MODULE ---
+        
         const CMAR_App = (() => {
-            // --- STATE ---
             let auth, db;
             let allAssessments = [];
             let filteredAssessments = [];
             let analysisChart = null;
             let assessmentSummaryChart = null;
-            let unsubscribeFromAssessments = null; // To detach listener
+            let unsubscribeFromAssessments = null;
 
-            // --- DATA ---
-            const riskData = { /* ... your risk data object remains unchanged ... */ 
-                "Humana": [ { id: "H1", text: "Nível de experiência na modalidade (Técnico)" }, { id: "H2", text: "Competências de resgate e socorrismo (Técnico)" }, { id: "H3", text: "Informações dos procedimentos de segurança aos praticantes (Técnico)" }, { id: "H4", text: "Rácio técnico/praticantes" }, { id: "H5", text: "Utilização de procedimentos de segurança (Técnico)" }, { id: "H6", text: "Capacidade de liderança e tomada de decisão (Técnico)" }, { id: "H7", text: "Competências de planeamento e gestão (Técnico)" }, { id: "H8", text: "Conhecimento dos locais de prática e dos seus perigos (Técnico)" }, { id: "H9", text: "Competências de intervenção pedagógica e profissional (Técnico)" }, { id: "H10", text: "Condição física (Técnico)" }, { id: "H11", text: "Vestuário e calçado adequado (Praticante)" }, { id: "H12", text: "Nível de experiência na modalidade (Praticante)" }, { id: "H13", text: "Conduta de procedimentos de segurança (Praticante)" }, ],
-                "Ambiental": [ { id: "A1", text: "Temperatura" }, { id: "A2", text: "Condições adversas extremas (vento, trovoada, neve, chuva e nevoeiro)" }, { id: "A3", text: "Estado de conservação do meio ambiente" }, { id: "A4", text: "Acesso a veículos de socorro ou outros" }, { id: "A5", text: "Comunicações (rede telemóvel, rádios transmissores)" }, { id: "A6", text: "Dificuldade do percurso" }, { id: "A7", text: "Duração do percurso" }, { id: "A8", text: "Nível da água (Apenas canyoning)" }, { id: "A9", text: "Tipo e qualidade da rocha (Apenas canyoning e escalada)" }, { id: "A10", text: "Exposição solar (Apenas escalada)" }, ],
-                "Materiais e Equipamentos": [ { id: "M1", text: "Utilização de materiais e equipamentos certificados (homologados)" }, { id: "M2", text: "Manutenção e preservação dos materiais e equipamentos" }, { id: "M3", text: "Características dos materiais e equipamentos" }, { id: "M4", text: "Manipulação dos materiais e equipamentos" }, { id: "M5", text: "Adequação dos materiais e equipamentos ao nível dos praticantes" }, { id: "M6", text: "Estado de conservação dos equipamentos fixos existentes nas vias (Apenas escalada)" }, { id: "M7", text: "Performance dos materiais e equipamentos" }, ],
-                "Segurança e Emergência": [ { id: "S1", text: "Equipamento para comunicações (telemóvel, rádios, etc..)" }, { id: "S2", text: "Kit primeiros socorros" }, { id: "S3", text: "Equipamento para salvamento e resgate" }, { id: "S4", text: "Kit sobrevivência (apito, frontais, faca, alimentação, etc..)" }, { id: "S5", text: "Equipamento de proteção individual e coletiva (EPI e EPC adequados)" }, ]
-            };
+            const riskData = { "Humana": [ { id: "H1", text: "Nível de experiência na modalidade (Técnico)" }, { id: "H2", text: "Competências de resgate e socorrismo (Técnico)" }, { id: "H3", text: "Informações dos procedimentos de segurança aos praticantes (Técnico)" }, { id: "H4", text: "Rácio técnico/praticantes" }, { id: "H5", text: "Utilização de procedimentos de segurança (Técnico)" }, { id: "H6", text: "Capacidade de liderança e tomada de decisão (Técnico)" }, { id: "H7", text: "Competências de planeamento e gestão (Técnico)" }, { id: "H8", text: "Conhecimento dos locais de prática e dos seus perigos (Técnico)" }, { id: "H9", text: "Competências de intervenção pedagógica e profissional (Técnico)" }, { id: "H10", text: "Condição física (Técnico)" }, { id: "H11", text: "Vestuário e calçado adequado (Praticante)" }, { id: "H12", text: "Nível de experiência na modalidade (Praticante)" }, { id: "H13", text: "Conduta de procedimentos de segurança (Praticante)" }, ], "Ambiental": [ { id: "A1", text: "Temperatura" }, { id: "A2", text: "Condições adversas extremas (vento, trovoada, neve, chuva e nevoeiro)" }, { id: "A3", text: "Estado de conservação do meio ambiente" }, { id: "A4", text: "Acesso a veículos de socorro ou outros" }, { id: "A5", text: "Comunicações (rede telemóvel, rádios transmissores)" }, { id: "A6", text: "Dificuldade do percurso" }, { id: "A7", text: "Duração do percurso" }, { id: "A8", text: "Nível da água (Apenas canyoning)" }, { id: "A9", text: "Tipo e qualidade da rocha (Apenas canyoning e escalada)" }, { id: "A10", text: "Exposição solar (Apenas escalada)" }, ], "Materiais e Equipamentos": [ { id: "M1", text: "Utilização de materiais e equipamentos certificados (homologados)" }, { id: "M2", text: "Manutenção e preservação dos materiais e equipamentos" }, { id: "M3", text: "Características dos materiais e equipamentos" }, { id: "M4", text: "Manipulação dos materiais e equipamentos" }, { id: "M5", text: "Adequação dos materiais e equipamentos ao nível dos praticantes" }, { id: "M6", text: "Estado de conservação dos equipamentos fixos existentes nas vias (Apenas escalada)" }, { id: "M7", text: "Performance dos materiais e equipamentos" }, ], "Segurança e Emergência": [ { id: "S1", text: "Equipamento para comunicações (telemóvel, rádios, etc..)" }, { id: "S2", text: "Kit primeiros socorros" }, { id: "S3", text: "Equipamento para salvamento e resgate" }, { id: "S4", text: "Kit sobrevivência (apito, frontais, faca, alimentação, etc..)" }, { id: "S5", text: "Equipamento de proteção individual e coletiva (EPI e EPC adequados)" }, ] };
 
-            // --- DOM ELEMENTS CACHE ---
             const DOM = {};
-            const elementIds = [
-                'main-container', 'risk-factors-container', 'calculate-btn-assessment', 'save-assessment-btn', 'clear-btn', 'export-pdf-btn', 'export-excel-btn', 'evalDate', 'results-content-assessment', 'overall-classification', 'overall-recommendation', 'overall-treatment', 'overall-result', 'extreme-risk-summary-container', 'extreme-risk-list', 'nav-assessment', 'nav-dashboard', 'page-assessment', 'page-dashboard', 'apply-filters-btn', 'export-filtered-excel-btn', 'assessment-history-list', 'toast-notification'
-            ];
+            const elementIds = [ 'main-container', 'risk-factors-container', 'calculate-btn-assessment', 'save-assessment-btn', 'clear-btn', 'export-pdf-btn', 'export-excel-btn', 'evalDate', 'results-content-assessment', 'overall-classification', 'overall-recommendation', 'overall-treatment', 'overall-result', 'extreme-risk-summary-container', 'extreme-risk-list', 'nav-assessment', 'nav-dashboard', 'page-assessment', 'page-dashboard', 'apply-filters-btn', 'export-filtered-excel-btn', 'assessment-history-list', 'toast-notification' ];
             elementIds.forEach(id => DOM[id] = document.getElementById(id));
 
-            // --- UTILITY FUNCTIONS ---
             const showToast = (message, type = 'success') => {
-                const colorMap = {
-                    success: 'bg-green-600',
-                    error: 'bg-red-600',
-                    warning: 'bg-yellow-500'
-                };
+                const colorMap = { success: 'bg-green-600', error: 'bg-red-600', warning: 'bg-yellow-500' };
                 DOM['toast-notification'].textContent = message;
                 DOM['toast-notification'].className = `${colorMap[type]} show`;
-                setTimeout(() => {
-                    DOM['toast-notification'].classList.remove('show');
-                }, 3000);
+                setTimeout(() => { DOM['toast-notification'].classList.remove('show'); }, 3000);
             };
 
             const getRiskClassification = (score) => {
@@ -323,23 +250,16 @@
             };
 
             const getRiskStyleClasses = (riskColorClass) => {
-                const styleMap = {
-                    'risk-low': { bg: 'bg-green-500', text: 'text-white' },
-                    'risk-moderate': { bg: 'bg-yellow-400', text: 'text-gray-800' },
-                    'risk-high': { bg: 'bg-orange-500', text: 'text-white' },
-                    'risk-extreme': { bg: 'bg-red-500', text: 'text-white' }
-                };
+                const styleMap = { 'risk-low': { bg: 'bg-green-500', text: 'text-white' }, 'risk-moderate': { bg: 'bg-yellow-400', text: 'text-gray-800' }, 'risk-high': { bg: 'bg-orange-500', text: 'text-white' }, 'risk-extreme': { bg: 'bg-red-500', text: 'text-white' } };
                 return styleMap[riskColorClass] || { bg: 'bg-gray-400', text: 'text-white' };
             };
 
-            // --- CORE LOGIC ---
             const initFirebase = () => {
                 try {
                     const firebaseConfig = JSON.parse(window.__firebase_config);
                     const app = initializeApp(firebaseConfig);
                     auth = getAuth(app);
                     db = getFirestore(app);
-                    setLogLevel('debug'); // For more detailed logs during development
                     
                     onAuthStateChanged(auth, async (user) => {
                         if (user) {
@@ -348,15 +268,10 @@
                         } else {
                             console.log("No user signed in, attempting anonymous sign-in.");
                             try {
-                                if (typeof window.__initial_auth_token !== 'undefined' && window.__initial_auth_token) {
-                                    await signInWithCustomToken(auth, window.__initial_auth_token);
-                                } else {
-                                    await signInAnonymously(auth);
-                                }
+                                await signInAnonymously(auth);
                             } catch (error) {
                                 console.error("Anonymous sign-in failed:", error);
-                                // The original error handling for blocked domains was excellent, let's keep it.
-                                 if (error.code && (error.code.includes('auth/network-request-failed') || error.message.includes('permission-denied'))) {
+                                if (error.code && (error.code.includes('auth/network-request-failed') || error.message.includes('permission-denied'))) {
                                     displayAuthError();
                                 }
                             }
@@ -370,18 +285,8 @@
             
             const displayAuthError = () => {
                 const blockedReferrer = window.location.hostname || 'O seu site atual';
-                DOM['main-container'].innerHTML = `
-                    <div class="card p-6 mb-8 bg-red-50 border border-red-200">
-                        <h2 class="text-2xl font-bold text-red-700 flex items-center gap-2">
-                           <svg class="w-8 h-8"><use xlink:href="#icon-alert-triangle"></use></svg>
-                           Erro de Ligação à Base de Dados (Acesso Bloqueado)
-                        </h2>
-                        <p class="mt-4 text-red-800">A sua base de dados (Firebase) está a bloquear o acesso a partir deste site por segurança.</p>
-                        <p class="mt-4 font-bold text-red-900">Para resolver, precisa de autorizar este site na Google Cloud Console.</p>
-                        <p class="mt-2 text-red-800">Na secção "Restrições de sites" da sua chave de API, adicione o seguinte endereço: <br> <strong class="bg-red-100 p-1 rounded font-mono text-sm">${blockedReferrer}</strong></p>
-                    </div>`;
+                DOM['main-container'].innerHTML = `<div class="card p-6 mb-8 bg-red-50 border border-red-200"><h2 class="text-2xl font-bold text-red-700 flex items-center gap-2"><svg class="w-8 h-8"><use xlink:href="#icon-alert-triangle"></use></svg>Erro de Ligação à Base de Dados (Acesso Bloqueado)</h2><p class="mt-4 text-red-800">A sua base de dados (Firebase) está a bloquear o acesso a partir deste site por segurança.</p><p class="mt-4 font-bold text-red-900">Para resolver, precisa de autorizar este site na Google Cloud Console.</p><p class="mt-2 text-red-800">Na secção "Restrições de sites" da sua chave de API, adicione o seguinte endereço: <br> <strong class="bg-red-100 p-1 rounded font-mono text-sm">${blockedReferrer}</strong></p></div>`;
             };
-
 
             const createRiskMatrix = (factorId) => {
                 let matrixHtml = `<div class="risk-matrix-container"><div class="axis-label">Probabilidade</div><div class="risk-matrix" id="matrix-${factorId}" data-factor-id="${factorId}">`;
@@ -404,18 +309,14 @@
                 const classificationEl = rowEl.querySelector(`#class-${factorId}`);
                 const recommendationEl = rowEl.querySelector(`#rec-${factorId}`);
                 const treatmentEl = rowEl.querySelector(`#treat-${factorId}`);
-                
                 const classification = getRiskClassification(score);
                 const styles = getRiskStyleClasses(classification.colorClass);
-
                 scoreEl.textContent = score;
                 classificationEl.textContent = classification.level;
                 recommendationEl.textContent = classification.recommendation;
                 treatmentEl.textContent = classification.treatment;
-
                 const badge = scoreEl.parentElement;
                 badge.className = `risk-score-badge ${styles.bg} ${styles.text}`;
-                
                 rowEl.classList.toggle('extreme-risk-alert-row', classification.level === "Risco Extremo");
             };
             
@@ -424,36 +325,7 @@
                 Object.entries(riskData).forEach(([dimension, factors]) => {
                     const dimensionCard = document.createElement('div');
                     dimensionCard.className = 'card mb-8';
-                    dimensionCard.innerHTML = `
-                        <h2 class="text-2xl font-bold text-slate-100 bg-slate-600 p-4 border-b border-slate-700">Dimensão: ${dimension}</h2>
-                        <div class="p-6">
-                            <div class="space-y-6">
-                                ${factors.map((factor, index) => {
-                                    const defaultClassification = getRiskClassification(1);
-                                    const defaultStyles = getRiskStyleClasses(defaultClassification.colorClass);
-                                    const frNumber = `FR${index + 1}`;
-                                    return `
-                                    <div id="row-${factor.id}" data-score="1" data-dimension="${dimension}" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center p-4 rounded-lg border border-gray-200 transition-all duration-300">
-                                        <div class="md:col-span-1">
-                                            <p class="font-semibold text-gray-800 flex items-start gap-2">
-                                                <svg class="w-5 h-5 extreme-risk-icon flex-shrink-0 mt-1"><use xlink:href="#icon-alert-triangle"></use></svg>
-                                                <span class="font-bold text-gray-500 w-12 flex-shrink-0">${frNumber}:</span>
-                                                <span id="text-${factor.id}">${factor.text}</span>
-                                            </p>
-                                        </div>
-                                        <div class="md:col-span-1 flex justify-center">${createRiskMatrix(factor.id)}</div>
-                                        <div class="md:col-span-1 flex flex-col items-center justify-center text-center">
-                                            <div class="risk-score-badge ${defaultStyles.bg} ${defaultStyles.text}"><span id="score-${factor.id}">1</span></div>
-                                            <span id="class-${factor.id}" class="text-lg font-bold text-gray-800 mt-2">${defaultClassification.level}</span>
-                                            <div class="text-xs text-left mt-2 p-2 bg-gray-50 rounded-md border w-full">
-                                                <p><strong class="text-gray-600">Recomendação:</strong> <span id="rec-${factor.id}">${defaultClassification.recommendation}</span></p>
-                                                <p class="mt-1"><strong class="text-gray-600">Tratamento:</strong> <span id="treat-${factor.id}">${defaultClassification.treatment}</span></p>
-                                            </div>
-                                        </div>
-                                    </div>`;
-                                }).join('')}
-                            </div>
-                        </div>`;
+                    dimensionCard.innerHTML = `<h2 class="text-2xl font-bold text-slate-100 bg-slate-600 p-4 border-b border-slate-700">Dimensão: ${dimension}</h2><div class="p-6"><div class="space-y-6">${factors.map((factor, index) => { const defaultClassification = getRiskClassification(1); const defaultStyles = getRiskStyleClasses(defaultClassification.colorClass); const frNumber = `FR${index + 1}`; return `<div id="row-${factor.id}" data-score="1" data-dimension="${dimension}" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center p-4 rounded-lg border border-gray-200 transition-all duration-300"><div class="md:col-span-1"><p class="font-semibold text-gray-800 flex items-start gap-2"><svg class="w-5 h-5 extreme-risk-icon flex-shrink-0 mt-1"><use xlink:href="#icon-alert-triangle"></use></svg><span class="font-bold text-gray-500 w-12 flex-shrink-0">${frNumber}:</span><span id="text-${factor.id}">${factor.text}</span></p></div><div class="md:col-span-1 flex justify-center">${createRiskMatrix(factor.id)}</div><div class="md:col-span-1 flex flex-col items-center justify-center text-center"><div class="risk-score-badge ${defaultStyles.bg} ${defaultStyles.text}"><span id="score-${factor.id}">1</span></div><span id="class-${factor.id}" class="text-lg font-bold text-gray-800 mt-2">${defaultClassification.level}</span><div class="text-xs text-left mt-2 p-2 bg-gray-50 rounded-md border w-full"><p><strong class="text-gray-600">Recomendação:</strong> <span id="rec-${factor.id}">${defaultClassification.recommendation}</span></p><p class="mt-1"><strong class="text-gray-600">Tratamento:</strong> <span id="treat-${factor.id}">${defaultClassification.treatment}</span></p></div></div></div>`; }).join('')}</div></div>`;
                     fragment.appendChild(dimensionCard);
                 });
                 DOM['risk-factors-container'].appendChild(fragment);
@@ -466,7 +338,6 @@
                         const score = cell.dataset.score;
                         document.getElementById(`row-${factorId}`).dataset.score = score;
                         updateFactorDisplay(factorId, score);
-
                         const currentSelected = matrix.querySelector('.selected');
                         if (currentSelected) currentSelected.classList.remove('selected');
                         cell.classList.add('selected');
@@ -477,19 +348,14 @@
             const calculateAndShowResults = () => {
                 let highestRiskScore = 0;
                 const extremeRiskFactors = [];
-                const dimensionRiskCounts = Object.keys(riskData).reduce((acc, dim) => {
-                    acc[dim] = { "Risco Baixo": 0, "Risco Moderado": 0, "Risco Elevado": 0, "Risco Extremo": 0 };
-                    return acc;
-                }, {});
+                const dimensionRiskCounts = Object.keys(riskData).reduce((acc, dim) => { acc[dim] = { "Risco Baixo": 0, "Risco Moderado": 0, "Risco Elevado": 0, "Risco Extremo": 0 }; return acc; }, {});
 
                 document.querySelectorAll('[id^="row-"]').forEach(row => {
                     const score = parseInt(row.dataset.score, 10);
                     if (score > highestRiskScore) highestRiskScore = score;
                     const classification = getRiskClassification(score);
                     const dimension = row.dataset.dimension;
-                    if (dimensionRiskCounts[dimension]) {
-                        dimensionRiskCounts[dimension][classification.level]++;
-                    }
+                    if (dimensionRiskCounts[dimension]) { dimensionRiskCounts[dimension][classification.level]++; }
                     if (classification.level === "Risco Extremo") {
                         const factorId = row.id.split('-')[1];
                         const factorText = document.getElementById(`text-${factorId}`).textContent;
@@ -514,7 +380,6 @@
                 DOM['overall-result'].className = `p-6 rounded-lg text-center flex flex-col justify-center h-full ${styles.bg} ${styles.text}`;
                 DOM['overall-classification'].className = `text-4xl font-bold`;
                 DOM['results-content-assessment'].classList.remove('hidden');
-                
                 updateAssessmentSummaryChart(dimensionRiskCounts);
             };
 
@@ -523,27 +388,10 @@
                 const labels = Object.keys(dimensionRiskCounts);
                 const riskLevels = ["Risco Baixo", "Risco Moderado", "Risco Elevado", "Risco Extremo"];
                 const colors = ['#22c55e', '#facc15', '#f97316', '#ef4444'];
-                const datasets = riskLevels.map((level, index) => ({
-                    label: level,
-                    data: labels.map(dim => dimensionRiskCounts[dim][level]),
-                    backgroundColor: colors[index],
-                }));
+                const datasets = riskLevels.map((level, index) => ({ label: level, data: labels.map(dim => dimensionRiskCounts[dim][level]), backgroundColor: colors[index], }));
 
                 if (assessmentSummaryChart) assessmentSummaryChart.destroy();
-
-                assessmentSummaryChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: { labels, datasets },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            x: { stacked: false },
-                            y: { stacked: false, beginAtZero: true, title: { display: true, text: 'Nº de Fatores de Risco' }, ticks: { stepSize: 1 } }
-                        },
-                        plugins: { legend: { display: true, position: 'bottom' } }
-                    }
-                });
+                assessmentSummaryChart = new Chart(ctx, { type: 'bar', data: { labels, datasets }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: false }, y: { stacked: false, beginAtZero: true, title: { display: true, text: 'Nº de Fatores de Risco' }, ticks: { stepSize: 1 } } }, plugins: { legend: { display: true, position: 'bottom' } } } });
             };
 
             const saveAssessment = async () => {
@@ -551,13 +399,7 @@
                     showToast("A ligação à base de dados não está disponível.", 'error');
                     return;
                 }
-                const generalInfo = {
-                    evaluatorName: document.getElementById('evaluatorName').value.trim(),
-                    evalDate: DOM['evalDate'].value,
-                    location: document.getElementById('location').value.trim(),
-                    activity: document.getElementById('activity').value.trim(),
-                };
-
+                const generalInfo = { evaluatorName: document.getElementById('evaluatorName').value.trim(), evalDate: DOM['evalDate'].value, location: document.getElementById('location').value.trim(), activity: document.getElementById('activity').value.trim(), };
                 if (Object.values(generalInfo).some(val => !val)) {
                     showToast("Por favor, preencha todas as informações da avaliação.", 'warning');
                     return;
@@ -568,27 +410,14 @@
                     const score = parseInt(row.dataset.score, 10);
                     if (score > highestRiskScore) highestRiskScore = score;
                     const factorId = row.id.split('-')[1];
-                    return {
-                        id: factorId,
-                        text: document.getElementById(`text-${factorId}`).textContent,
-                        score: score,
-                        dimension: row.dataset.dimension,
-                    };
+                    return { id: factorId, text: document.getElementById(`text-${factorId}`).textContent, score: score, dimension: row.dataset.dimension, };
                 });
                 
                 const overallClassification = getRiskClassification(highestRiskScore);
-                const assessmentData = {
-                    ...generalInfo,
-                    userId: auth.currentUser.uid,
-                    createdAt: new Date().toISOString(),
-                    overallRiskLevel: overallClassification.level,
-                    overallRecommendation: overallClassification.recommendation,
-                    factors: evaluatedFactors,
-                };
+                const assessmentData = { ...generalInfo, userId: auth.currentUser.uid, createdAt: new Date().toISOString(), overallRiskLevel: overallClassification.level, overallRecommendation: overallClassification.recommendation, factors: evaluatedFactors, };
                 
                 try {
                     const appId = window.__app_id || 'default-app-id';
-                    // Using a public collection as per the original logic
                     const docRef = await addDoc(collection(db, `artifacts/${appId}/public/data/cmar_assessments`), assessmentData);
                     console.log("Document written with ID: ", docRef.id);
                     showToast("Avaliação guardada com sucesso!", 'success');
@@ -618,18 +447,13 @@
 
             const loadAssessments = () => {
                 if (!db) return;
-                // Detach previous listener if it exists
                 if (unsubscribeFromAssessments) unsubscribeFromAssessments();
-                
                 const appId = window.__app_id || 'default-app-id';
                 const q = query(collection(db, `artifacts/${appId}/public/data/cmar_assessments`));
                 
                 unsubscribeFromAssessments = onSnapshot(q, (querySnapshot) => {
                     const assessments = [];
-                    querySnapshot.forEach((doc) => {
-                        assessments.push({ id: doc.id, ...doc.data() });
-                    });
-                    // Sort in memory (descending by creation date)
+                    querySnapshot.forEach((doc) => { assessments.push({ id: doc.id, ...doc.data() }); });
                     allAssessments = assessments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                     applyFilters();
                 }, (error) => {
@@ -644,98 +468,47 @@
                 const location = document.getElementById('filter-location').value.toLowerCase();
                 const evaluator = document.getElementById('filter-evaluator').value.toLowerCase();
                 
-                filteredAssessments = allAssessments.filter(item => {
-                    const itemDate = item.evalDate;
-                    return (!startDate || itemDate >= startDate) &&
-                           (!endDate || itemDate <= endDate) &&
-                           (!location || item.location.toLowerCase().includes(location)) &&
-                           (!evaluator || item.evaluatorName.toLowerCase().includes(evaluator));
-                });
+                filteredAssessments = allAssessments.filter(item => { return (!startDate || item.evalDate >= startDate) && (!endDate || item.evalDate <= endDate) && (!location || item.location.toLowerCase().includes(location)) && (!evaluator || item.evaluatorName.toLowerCase().includes(evaluator)); });
                 renderHistoryList(filteredAssessments);
                 updateAnalysisChart(filteredAssessments);
             };
 
             const renderHistoryList = (assessments) => {
-                 if (assessments.length === 0) {
-                    DOM['assessment-history-list'].innerHTML = '<p>Nenhuma avaliação encontrada para os filtros selecionados.</p>';
-                    return;
-                }
+                 if (assessments.length === 0) { DOM['assessment-history-list'].innerHTML = '<p>Nenhuma avaliação encontrada para os filtros selecionados.</p>'; return; }
                 DOM['assessment-history-list'].innerHTML = assessments.map(item => {
                     const classification = getRiskClassification(Math.max(...item.factors.map(f => f.score)));
                     const styles = getRiskStyleClasses(classification.colorClass);
-                    return `
-                        <div class="border rounded-lg p-4 flex justify-between items-center">
-                            <div>
-                                <p class="font-bold">${item.activity} em ${item.location}</p>
-                                <p class="text-sm text-gray-600">Avaliador: ${item.evaluatorName} em ${new Date(item.evalDate).toLocaleDateString('pt-PT')}</p>
-                            </div>
-                            <div class="text-right">
-                               <span class="px-3 py-1 text-sm font-semibold ${styles.bg} ${styles.text} rounded-full">${classification.level}</span>
-                            </div>
-                        </div>`;
+                    return `<div class="border rounded-lg p-4 flex justify-between items-center"><div><p class="font-bold">${item.activity} em ${item.location}</p><p class="text-sm text-gray-600">Avaliador: ${item.evaluatorName} em ${new Date(item.evalDate).toLocaleDateString('pt-PT')}</p></div><div class="text-right"><span class="px-3 py-1 text-sm font-semibold ${styles.bg} ${styles.text} rounded-full">${classification.level}</span></div></div>`;
                 }).join('');
             };
             
             const updateAnalysisChart = (filteredData) => {
                 const ctx = document.getElementById('analysis-chart').getContext('2d');
                 const riskCounts = { "Risco Baixo": 0, "Risco Moderado": 0, "Risco Elevado": 0, "Risco Extremo": 0 };
-                
-                filteredData.forEach(assessment => {
-                    assessment.factors.forEach(factor => {
-                        const classification = getRiskClassification(factor.score);
-                        riskCounts[classification.level]++;
-                    });
-                });
-                
+                filteredData.forEach(assessment => { assessment.factors.forEach(factor => { const classification = getRiskClassification(factor.score); riskCounts[classification.level]++; }); });
                 if (analysisChart) analysisChart.destroy();
-                
-                analysisChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: Object.keys(riskCounts),
-                        datasets: [{
-                            label: 'Nº Total de Fatores por Nível de Risco',
-                            data: Object.values(riskCounts),
-                            backgroundColor: ['#22c55e', '#facc15', '#f97316', '#ef4444'],
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
-                        plugins: { legend: { display: false } }
-                    }
-                });
+                analysisChart = new Chart(ctx, { type: 'bar', data: { labels: Object.keys(riskCounts), datasets: [{ label: 'Nº Total de Fatores por Nível de Risco', data: Object.values(riskCounts), backgroundColor: ['#22c55e', '#facc15', '#f97316', '#ef4444'], }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }, plugins: { legend: { display: false } } } });
             };
 
-            // --- EXPORT FUNCTIONS ---
             const exportToPDF = () => {
-                 if (DOM['results-content-assessment'].classList.contains('hidden')) {
-                    showToast("Calcule os resultados antes de exportar.", 'warning');
-                    return;
-                }
+                 if (DOM['results-content-assessment'].classList.contains('hidden')) { showToast("Calcule os resultados antes de exportar.", 'warning'); return; }
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF('p', 'mm', 'a4');
                 const content = DOM['page-assessment'];
-                // Temporarily remove buttons for cleaner PDF
                 content.querySelectorAll('button').forEach(btn => btn.style.display = 'none');
                 
                 html2canvas(content, { scale: 2 }).then(canvas => {
-                    content.querySelectorAll('button').forEach(btn => btn.style.display = ''); // Restore buttons
+                    content.querySelectorAll('button').forEach(btn => btn.style.display = '');
                     const imgData = canvas.toDataURL('image/png');
                     const pdfWidth = pdf.internal.pageSize.getWidth();
                     const pageHeight = pdf.internal.pageSize.getHeight();
                     const imgHeight = canvas.height * pdfWidth / canvas.width;
                     let heightLeft = imgHeight;
-                    let position = 0;
-                    
                     pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, imgHeight);
                     heightLeft -= pageHeight;
-
                     while (heightLeft > 0) {
-                        position -= pageHeight;
                         pdf.addPage();
-                        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+                        pdf.addImage(imgData, 'PNG', 0, -pageHeight * (Math.floor(imgHeight / pageHeight) - Math.floor(heightLeft / pageHeight)), pdfWidth, imgHeight);
                         heightLeft -= pageHeight;
                     }
                     pdf.save(`CMAR_Avaliacao_${new Date().toISOString().slice(0,10)}.pdf`);
@@ -746,35 +519,19 @@
             };
             
             const exportSingleAssessmentToExcel = () => {
-                if (DOM['results-content-assessment'].classList.contains('hidden')) {
-                     showToast("Calcule os resultados antes de exportar.", 'warning');
-                    return;
-                }
-                const generalInfo = {
-                    Avaliador: document.getElementById('evaluatorName').value,
-                    Data: DOM['evalDate'].value,
-                    Local: document.getElementById('location').value,
-                    Atividade: document.getElementById('activity').value,
-                };
-                
+                if (DOM['results-content-assessment'].classList.contains('hidden')) { showToast("Calcule os resultados antes de exportar.", 'warning'); return; }
+                const generalInfo = { Avaliador: document.getElementById('evaluatorName').value, Data: DOM['evalDate'].value, Local: document.getElementById('location').value, Atividade: document.getElementById('activity').value, };
                 const dataToExport = [];
                 Object.entries(generalInfo).forEach(([key, value]) => dataToExport.push({ Categoria: key, Detalhe: value }));
-                dataToExport.push({}); // Spacer row
+                dataToExport.push({});
                 dataToExport.push({ Categoria: 'Dimensão', Detalhe: 'Fator de Risco', 'Score': 'Score', 'Nível de Risco': 'Nível de Risco' });
-
                 document.querySelectorAll('[id^="row-"]').forEach(row => {
                     const factorId = row.id.split('-')[1];
                     const text = document.getElementById(`text-${factorId}`).textContent;
                     const score = row.dataset.score;
                     const level = getRiskClassification(parseInt(score)).level;
-                    dataToExport.push({
-                        Categoria: row.dataset.dimension,
-                        Detalhe: text,
-                        'Score': score,
-                        'Nível de Risco': level
-                    });
+                    dataToExport.push({ Categoria: row.dataset.dimension, Detalhe: text, 'Score': score, 'Nível de Risco': level });
                 });
-
                 const worksheet = XLSX.utils.json_to_sheet(dataToExport, { skipHeader: true });
                 const workbook = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(workbook, worksheet, "Avaliação CMAR");
@@ -782,37 +539,17 @@
             };
 
             const exportFilteredAssessmentsToExcel = () => {
-                if (filteredAssessments.length === 0) {
-                     showToast("Não há dados filtrados para exportar.", 'warning');
-                    return;
-                }
-                const summaryData = filteredAssessments.map(item => ({
-                    'Data': item.evalDate,
-                    'Avaliador': item.evaluatorName,
-                    'Local': item.location,
-                    'Atividade': item.activity,
-                    'Nível de Risco Geral': item.overallRiskLevel,
-                    'Recomendação': item.overallRecommendation
-                }));
+                if (filteredAssessments.length === 0) { showToast("Não há dados filtrados para exportar.", 'warning'); return; }
+                const summaryData = filteredAssessments.map(item => ({ 'Data': item.evalDate, 'Avaliador': item.evaluatorName, 'Local': item.location, 'Atividade': item.activity, 'Nível de Risco Geral': item.overallRiskLevel, 'Recomendação': item.overallRecommendation }));
                 const summarySheet = XLSX.utils.json_to_sheet(summaryData);
-                
                 const detailedData = [];
-                filteredAssessments.forEach((item, index) => {
-                    item.factors.forEach(factor => {
-                        detailedData.push({
-                            'ID Avaliação': index + 1, 'Data': item.evalDate, 'Avaliador': item.evaluatorName, 'Local': item.location, 'Atividade': item.activity,
-                            'Dimensão': factor.dimension, 'Fator de Risco': factor.text, 'Score': factor.score, 'Nível de Risco': getRiskClassification(factor.score).level
-                        });
-                    });
-                });
+                filteredAssessments.forEach((item, index) => { item.factors.forEach(factor => { detailedData.push({ 'ID Avaliação': index + 1, 'Data': item.evalDate, 'Avaliador': item.evaluatorName, 'Local': item.location, 'Atividade': item.activity, 'Dimensão': factor.dimension, 'Fator de Risco': factor.text, 'Score': factor.score, 'Nível de Risco': getRiskClassification(factor.score).level }); }); });
                 const detailedSheet = XLSX.utils.json_to_sheet(detailedData);
-                
                 const workbook = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(workbook, summarySheet, "Resumo");
                 XLSX.utils.book_append_sheet(workbook, detailedSheet, "Dados Completos");
                 XLSX.writeFile(workbook, `CMAR_Export_Filtrado_${new Date().toISOString().slice(0,10)}.xlsx`);
             };
-
 
             const switchPage = (pageToShow) => {
                 const isDashboard = pageToShow === 'dashboard';
@@ -822,7 +559,6 @@
                 DOM['nav-dashboard'].classList.toggle('active', isDashboard);
             };
 
-            // --- EVENT LISTENERS & INITIALIZATION ---
             const bindEvents = () => {
                 DOM['calculate-btn-assessment'].addEventListener('click', calculateAndShowResults);
                 DOM['save-assessment-btn'].addEventListener('click', saveAssessment);
@@ -845,7 +581,6 @@
             return { init };
         })();
 
-        // --- START THE APP ---
         document.addEventListener('DOMContentLoaded', CMAR_App.init);
     </script>
 </body>
