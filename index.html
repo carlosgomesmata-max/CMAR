@@ -25,21 +25,15 @@
 
     <!-- Firebase SDK (Modular v11+) -->
     <script type="module">
-        // This block provides the Firebase configuration. Since the app is on GitHub Pages,
-        // it uses this hardcoded configuration directly.
         if (typeof window.__firebase_config === 'undefined') {
             window.__firebase_config = JSON.stringify({
-                // --- CONFIGURAÇÃO CORRIGIDA ---
                 apiKey: "AIzaSyA_ZmP3k0wob6jqoEV-k0KP1NjD2zKN5Ds",
                 authDomain: "cmar-4866b.firebaseapp.com",
                 projectId: "cmar-4866b",
-                storageBucket: "cmar-4866b.appspot.com", // <-- ESTA LINHA FOI CORRIGIDA
+                storageBucket: "cmar-4866b.appspot.com",
                 messagingSenderId: "481963120706",
                 appId: "1:481963120706:web:42a8712b0fa153b12d75db"
             });
-        }
-        if (typeof window.__app_id === 'undefined') {
-            window.__app_id = 'cmar-app-standalone';
         }
     </script>
 
@@ -98,8 +92,11 @@
 
         <!-- Header -->
         <header class="text-center mb-8">
-            <h1 class="text-3xl sm:text-4xl font-bold header-title">CMAR</h1>
+            <div class="flex justify-center items-center gap-4">
+                <h1 class="text-3xl sm:text-4xl font-bold header-title">CMAR</h1>
+            </div>
             <p class="text-lg text-gray-600 mt-2">Checklist e Matriz de Avaliação do Risco em Desportos de Montanha</p>
+             <a href="index_en.html" class="text-sm text-blue-600 hover:underline mt-2 inline-block">Switch to English</a>
         </header>
 
         <!-- Navigation -->
@@ -219,7 +216,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         
         const CMAR_App = (() => {
             let auth, db;
@@ -417,8 +414,7 @@
                 const assessmentData = { ...generalInfo, userId: auth.currentUser.uid, createdAt: new Date().toISOString(), overallRiskLevel: overallClassification.level, overallRecommendation: overallClassification.recommendation, factors: evaluatedFactors, };
                 
                 try {
-                    const appId = window.__app_id || 'default-app-id';
-                    const docRef = await addDoc(collection(db, `artifacts/${appId}/public/data/cmar_assessments`), assessmentData);
+                    const docRef = await addDoc(collection(db, 'cmar_assessments_public'), assessmentData);
                     console.log("Document written with ID: ", docRef.id);
                     showToast("Avaliação guardada com sucesso!", 'success');
                 } catch (error) {
@@ -448,17 +444,16 @@
             const loadAssessments = () => {
                 if (!db) return;
                 if (unsubscribeFromAssessments) unsubscribeFromAssessments();
-                const appId = window.__app_id || 'default-app-id';
-                const q = query(collection(db, `artifacts/${appId}/public/data/cmar_assessments`));
+                const q = query(collection(db, 'cmar_assessments_public'), orderBy("createdAt", "desc"));
                 
                 unsubscribeFromAssessments = onSnapshot(q, (querySnapshot) => {
                     const assessments = [];
                     querySnapshot.forEach((doc) => { assessments.push({ id: doc.id, ...doc.data() }); });
-                    allAssessments = assessments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    allAssessments = assessments;
                     applyFilters();
                 }, (error) => {
                     console.error("Error loading assessments: ", error);
-                    DOM['assessment-history-list'].innerHTML = '<p class="text-red-500">Erro ao carregar as avaliações.</p>';
+                    DOM['assessment-history-list'].innerHTML = '<p class="text-red-500">Error loading assessments. Please check database security rules.</p>';
                 });
             };
 
@@ -474,31 +469,31 @@
             };
 
             const renderHistoryList = (assessments) => {
-                 if (assessments.length === 0) { DOM['assessment-history-list'].innerHTML = '<p>Nenhuma avaliação encontrada para os filtros selecionados.</p>'; return; }
+                 if (assessments.length === 0) { DOM['assessment-history-list'].innerHTML = '<p>No assessments found for the selected filters.</p>'; return; }
                 DOM['assessment-history-list'].innerHTML = assessments.map(item => {
                     const classification = getRiskClassification(Math.max(...item.factors.map(f => f.score)));
                     const styles = getRiskStyleClasses(classification.colorClass);
-                    return `<div class="border rounded-lg p-4 flex justify-between items-center"><div><p class="font-bold">${item.activity} em ${item.location}</p><p class="text-sm text-gray-600">Avaliador: ${item.evaluatorName} em ${new Date(item.evalDate).toLocaleDateString('pt-PT')}</p></div><div class="text-right"><span class="px-3 py-1 text-sm font-semibold ${styles.bg} ${styles.text} rounded-full">${classification.level}</span></div></div>`;
+                    return `<div class="border rounded-lg p-4 flex justify-between items-center"><div><p class="font-bold">${item.activity} at ${item.location}</p><p class="text-sm text-gray-600">Evaluator: ${item.evaluatorName} on ${new Date(item.evalDate).toLocaleDateString('en-US')}</p></div><div class="text-right"><span class="px-3 py-1 text-sm font-semibold ${styles.bg} ${styles.text} rounded-full">${classification.level}</span></div></div>`;
                 }).join('');
             };
             
             const updateAnalysisChart = (filteredData) => {
                 const ctx = document.getElementById('analysis-chart').getContext('2d');
-                const riskCounts = { "Risco Baixo": 0, "Risco Moderado": 0, "Risco Elevado": 0, "Risco Extremo": 0 };
+                const riskCounts = { "Low Risk": 0, "Moderate Risk": 0, "High Risk": 0, "Extreme Risk": 0 };
                 filteredData.forEach(assessment => { assessment.factors.forEach(factor => { const classification = getRiskClassification(factor.score); riskCounts[classification.level]++; }); });
                 if (analysisChart) analysisChart.destroy();
-                analysisChart = new Chart(ctx, { type: 'bar', data: { labels: Object.keys(riskCounts), datasets: [{ label: 'Nº Total de Fatores por Nível de Risco', data: Object.values(riskCounts), backgroundColor: ['#22c55e', '#facc15', '#f97316', '#ef4444'], }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }, plugins: { legend: { display: false } } } });
+                analysisChart = new Chart(ctx, { type: 'bar', data: { labels: Object.keys(riskCounts), datasets: [{ label: 'Total # of Factors by Risk Level', data: Object.values(riskCounts), backgroundColor: ['#22c55e', '#facc15', '#f97316', '#ef4444'], }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }, plugins: { legend: { display: false } } } });
             };
 
             const exportToPDF = () => {
-                 if (DOM['results-content-assessment'].classList.contains('hidden')) { showToast("Calcule os resultados antes de exportar.", 'warning'); return; }
+                 if (DOM['results-content-assessment'].classList.contains('hidden')) { showToast("Calculate results before exporting.", 'warning'); return; }
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF('p', 'mm', 'a4');
                 const content = DOM['page-assessment'];
-                content.querySelectorAll('button').forEach(btn => btn.style.display = 'none');
+                content.querySelectorAll('button, a').forEach(el => el.style.display = 'none');
                 
                 html2canvas(content, { scale: 2 }).then(canvas => {
-                    content.querySelectorAll('button').forEach(btn => btn.style.display = '');
+                    content.querySelectorAll('button, a').forEach(el => el.style.display = '');
                     const imgData = canvas.toDataURL('image/png');
                     const pdfWidth = pdf.internal.pageSize.getWidth();
                     const pageHeight = pdf.internal.pageSize.getHeight();
@@ -511,44 +506,44 @@
                         pdf.addImage(imgData, 'PNG', 0, -pageHeight * (Math.floor(imgHeight / pageHeight) - Math.floor(heightLeft / pageHeight)), pdfWidth, imgHeight);
                         heightLeft -= pageHeight;
                     }
-                    pdf.save(`CMAR_Avaliacao_${new Date().toISOString().slice(0,10)}.pdf`);
+                    pdf.save(`CMAR_Assessment_${new Date().toISOString().slice(0,10)}.pdf`);
                 }).catch(err => {
                     console.error("PDF export failed:", err);
-                    content.querySelectorAll('button').forEach(btn => btn.style.display = '');
+                    content.querySelectorAll('button, a').forEach(el => el.style.display = '');
                 });
             };
             
             const exportSingleAssessmentToExcel = () => {
-                if (DOM['results-content-assessment'].classList.contains('hidden')) { showToast("Calcule os resultados antes de exportar.", 'warning'); return; }
-                const generalInfo = { Avaliador: document.getElementById('evaluatorName').value, Data: DOM['evalDate'].value, Local: document.getElementById('location').value, Atividade: document.getElementById('activity').value, };
+                if (DOM['results-content-assessment'].classList.contains('hidden')) { showToast("Calculate results before exporting.", 'warning'); return; }
+                const generalInfo = { Evaluator: document.getElementById('evaluatorName').value, Date: DOM['evalDate'].value, Location: document.getElementById('location').value, Activity: document.getElementById('activity').value, };
                 const dataToExport = [];
-                Object.entries(generalInfo).forEach(([key, value]) => dataToExport.push({ Categoria: key, Detalhe: value }));
+                Object.entries(generalInfo).forEach(([key, value]) => dataToExport.push({ Category: key, Detail: value }));
                 dataToExport.push({});
-                dataToExport.push({ Categoria: 'Dimensão', Detalhe: 'Fator de Risco', 'Score': 'Score', 'Nível de Risco': 'Nível de Risco' });
+                dataToExport.push({ Category: 'Dimension', Detail: 'Risk Factor', 'Score': 'Score', 'Risk Level': 'Risk Level' });
                 document.querySelectorAll('[id^="row-"]').forEach(row => {
                     const factorId = row.id.split('-')[1];
                     const text = document.getElementById(`text-${factorId}`).textContent;
                     const score = row.dataset.score;
                     const level = getRiskClassification(parseInt(score)).level;
-                    dataToExport.push({ Categoria: row.dataset.dimension, Detalhe: text, 'Score': score, 'Nível de Risco': level });
+                    dataToExport.push({ Category: row.dataset.dimension, Detail: text, 'Score': score, 'Risk Level': level });
                 });
                 const worksheet = XLSX.utils.json_to_sheet(dataToExport, { skipHeader: true });
                 const workbook = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(workbook, worksheet, "Avaliação CMAR");
-                XLSX.writeFile(workbook, `CMAR_Avaliacao_${generalInfo.Data || 'single'}.xlsx`);
+                XLSX.utils.book_append_sheet(workbook, worksheet, "CMAR Assessment");
+                XLSX.writeFile(workbook, `CMAR_Assessment_${generalInfo.Date || 'single'}.xlsx`);
             };
 
             const exportFilteredAssessmentsToExcel = () => {
-                if (filteredAssessments.length === 0) { showToast("Não há dados filtrados para exportar.", 'warning'); return; }
-                const summaryData = filteredAssessments.map(item => ({ 'Data': item.evalDate, 'Avaliador': item.evaluatorName, 'Local': item.location, 'Atividade': item.activity, 'Nível de Risco Geral': item.overallRiskLevel, 'Recomendação': item.overallRecommendation }));
+                if (filteredAssessments.length === 0) { showToast("No filtered data to export.", 'warning'); return; }
+                const summaryData = filteredAssessments.map(item => ({ 'Date': item.evalDate, 'Evaluator': item.evaluatorName, 'Location': item.location, 'Activity': item.activity, 'Overall Risk Level': item.overallRiskLevel, 'Recommendation': item.overallRecommendation }));
                 const summarySheet = XLSX.utils.json_to_sheet(summaryData);
                 const detailedData = [];
-                filteredAssessments.forEach((item, index) => { item.factors.forEach(factor => { detailedData.push({ 'ID Avaliação': index + 1, 'Data': item.evalDate, 'Avaliador': item.evaluatorName, 'Local': item.location, 'Atividade': item.activity, 'Dimensão': factor.dimension, 'Fator de Risco': factor.text, 'Score': factor.score, 'Nível de Risco': getRiskClassification(factor.score).level }); }); });
+                filteredAssessments.forEach((item, index) => { item.factors.forEach(factor => { detailedData.push({ 'Assessment ID': index + 1, 'Date': item.evalDate, 'Evaluator': item.evaluatorName, 'Location': item.location, 'Activity': item.activity, 'Dimension': factor.dimension, 'Risk Factor': factor.text, 'Score': factor.score, 'Risk Level': getRiskClassification(factor.score).level }); }); });
                 const detailedSheet = XLSX.utils.json_to_sheet(detailedData);
                 const workbook = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(workbook, summarySheet, "Resumo");
-                XLSX.utils.book_append_sheet(workbook, detailedSheet, "Dados Completos");
-                XLSX.writeFile(workbook, `CMAR_Export_Filtrado_${new Date().toISOString().slice(0,10)}.xlsx`);
+                XLSX.utils.book_append_sheet(workbook, summarySheet, "Summary");
+                XLSX.utils.book_append_sheet(workbook, detailedSheet, "Full Data");
+                XLSX.writeFile(workbook, `CMAR_Filtered_Export_${new Date().toISOString().slice(0,10)}.xlsx`);
             };
 
             const switchPage = (pageToShow) => {
@@ -585,4 +580,3 @@
     </script>
 </body>
 </html>
-
