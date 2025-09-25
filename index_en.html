@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CMAR - Risk Assessment with Data Analysis</title>
+    <title>CMAR - Avaliação de Risco com Análise de Dados</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -25,7 +25,6 @@
 
     <!-- Firebase SDK (Modular v11+) -->
     <script type="module">
-        // This block provides the Firebase configuration.
         if (typeof window.__firebase_config === 'undefined') {
             window.__firebase_config = JSON.stringify({
                 apiKey: "AIzaSyA_ZmP3k0wob6jqoEV-k0KP1NjD2zKN5Ds",
@@ -96,37 +95,40 @@
 
         <!-- Header -->
         <header class="text-center mb-8">
-            <h1 class="text-3xl sm:text-4xl font-bold header-title">CMAR</h1>
-            <p class="text-lg text-gray-600 mt-2">Checklist and Matrix for Risk Assessment in Mountain Sports</p>
+            <div class="flex justify-center items-center gap-4">
+                <h1 class="text-3xl sm:text-4xl font-bold header-title">CMAR</h1>
+            </div>
+            <p class="text-lg text-gray-600 mt-2">Checklist e Matriz de Avaliação do Risco em Desportos de Montanha</p>
+             <a href="index_en.html" class="text-sm text-blue-600 hover:underline mt-2 inline-block">Switch to English</a>
         </header>
 
         <!-- Navigation -->
         <nav class="bg-white rounded-lg shadow p-2 mb-8 flex justify-center gap-4">
-            <button id="nav-assessment" class="nav-button active text-lg font-semibold py-2 px-4">New Assessment</button>
-            <button id="nav-dashboard" class="nav-button text-lg font-semibold py-2 px-4">Analysis Dashboard</button>
+            <button id="nav-assessment" class="nav-button active text-lg font-semibold py-2 px-4">Nova Avaliação</button>
+            <button id="nav-dashboard" class="nav-button text-lg font-semibold py-2 px-4">Dashboard de Análise</button>
         </nav>
 
         <!-- Page: New Assessment -->
         <div id="page-assessment" class="page active">
             <!-- General Information Card -->
             <div id="general-info-card" class="card p-6 mb-8">
-                <h2 class="text-2xl font-bold mb-4 text-gray-700 border-b pb-2">Assessment Information</h2>
+                <h2 class="text-2xl font-bold mb-4 text-gray-700 border-b pb-2">Informações da Avaliação</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="evaluatorName" class="block text-sm font-medium text-gray-700">Evaluator's Name</label>
-                        <input type="text" id="evaluatorName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Enter your name">
+                        <label for="evaluatorName" class="block text-sm font-medium text-gray-700">Nome do Avaliador</label>
+                        <input type="text" id="evaluatorName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Insira o seu nome">
                     </div>
                     <div>
-                        <label for="evalDate" class="block text-sm font-medium text-gray-700">Date</label>
+                        <label for="evalDate" class="block text-sm font-medium text-gray-700">Data</label>
                         <input type="date" id="evalDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                     </div>
                     <div>
-                        <label for="location" class="block text-sm font-medium text-gray-700">Activity Location</label>
-                        <input type="text" id="location" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="E.g., Serra da Estrela">
+                        <label for="location" class="block text-sm font-medium text-gray-700">Local da Atividade</label>
+                        <input type="text" id="location" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Ex: Serra da Estrela">
                     </div>
                     <div>
-                        <label for="activity" class="block text-sm font-medium text-gray-700">Activity</label>
-                        <input type="text" id="activity" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="E.g., Canyoning">
+                        <label for="activity" class="block text-sm font-medium text-gray-700">Atividade</label>
+                        <input type="text" id="activity" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Ex: Canyoning">
                     </div>
                 </div>
             </div>
@@ -138,13 +140,13 @@
 
             <!-- Results and Actions Card for Assessment Page -->
             <div id="results-card-assessment" class="card p-6 mt-8">
-                <h2 class="text-2xl font-bold mb-4 text-gray-700 border-b pb-2">Results and Actions</h2>
+                <h2 class="text-2xl font-bold mb-4 text-gray-700 border-b pb-2">Resultados e Ações</h2>
                 <div class="flex flex-wrap gap-4 mb-6">
-                    <button id="calculate-btn-assessment" class="btn btn-primary font-bold py-2 px-4 rounded-lg shadow-md">Calculate Results</button>
-                    <button id="save-assessment-btn" class="btn btn-secondary font-bold py-2 px-4 rounded-lg shadow-md">Save Assessment</button>
-                    <button id="export-pdf-btn" class="btn btn-secondary font-bold py-2 px-4 rounded-lg shadow-md">Export PDF</button>
-                    <button id="export-excel-btn" class="btn btn-success font-bold py-2 px-4 rounded-lg shadow-md">Export Excel</button>
-                    <button id="clear-btn" class="btn btn-danger font-bold py-2 px-4 rounded-lg shadow-md">Clear Form</button>
+                    <button id="calculate-btn-assessment" class="btn btn-primary font-bold py-2 px-4 rounded-lg shadow-md">Calcular Resultados</button>
+                    <button id="save-assessment-btn" class="btn btn-secondary font-bold py-2 px-4 rounded-lg shadow-md">Guardar Avaliação</button>
+                    <button id="export-pdf-btn" class="btn btn-secondary font-bold py-2 px-4 rounded-lg shadow-md">Exportar PDF</button>
+                    <button id="export-excel-btn" class="btn btn-success font-bold py-2 px-4 rounded-lg shadow-md">Exportar Excel</button>
+                    <button id="clear-btn" class="btn btn-danger font-bold py-2 px-4 rounded-lg shadow-md">Limpar Formulário</button>
                 </div>
 
                 <div id="results-content-assessment" class="hidden">
@@ -152,7 +154,7 @@
                     <div id="extreme-risk-summary-container" class="hidden mb-8">
                         <h3 class="text-xl font-bold text-red-600 flex items-center gap-2">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use xlink:href="#icon-alert-triangle"></use></svg>
-                            Extreme Risk Alerts
+                            Alertas de Risco Extremo
                         </h3>
                         <div id="extreme-risk-list" class="mt-2 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800"></div>
                     </div>
@@ -160,18 +162,18 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <!-- Overall Score and Classification -->
                         <div>
-                            <h3 class="text-xl font-semibold mb-3">Overall Assessment</h3>
+                            <h3 class="text-xl font-semibold mb-3">Avaliação Geral</h3>
                             <div id="overall-result" class="p-4 rounded-lg text-center flex flex-col justify-center h-full">
                                 <p id="overall-classification" class="text-4xl font-bold"></p>
                                 <div class="mt-4 text-left p-4 bg-gray-100 rounded-lg">
-                                    <p class="font-bold">Recommendation: <span id="overall-recommendation" class="font-normal"></span></p>
-                                    <p class="font-bold mt-2">Treatment/Action: <span id="overall-treatment" class="font-normal"></span></p>
+                                    <p class="font-bold">Recomendação: <span id="overall-recommendation" class="font-normal"></span></p>
+                                    <p class="font-bold mt-2">Tratamento/Ação: <span id="overall-treatment" class="font-normal"></span></p>
                                 </div>
                             </div>
                         </div>
                         <!-- Summary Chart -->
                         <div>
-                            <h3 class="text-xl font-semibold mb-3">Summary by Dimension (No. of Factors)</h3>
+                            <h3 class="text-xl font-semibold mb-3">Resumo por Dimensão (Nº de Fatores)</h3>
                             <div class="h-64">
                                 <canvas id="assessment-summary-chart"></canvas>
                             </div>
@@ -184,28 +186,28 @@
         <!-- Page: Dashboard -->
         <div id="page-dashboard" class="page">
             <div class="card p-6 mb-8">
-                <h2 class="text-2xl font-bold mb-4 text-gray-700 border-b pb-2">Analysis Filters</h2>
+                <h2 class="text-2xl font-bold mb-4 text-gray-700 border-b pb-2">Filtros de Análise</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <input type="date" id="filter-start-date" class="rounded-md border-gray-300 shadow-sm">
                     <input type="date" id="filter-end-date" class="rounded-md border-gray-300 shadow-sm">
-                    <input type="text" id="filter-location" placeholder="Filter by location..." class="rounded-md border-gray-300 shadow-sm">
-                    <input type="text" id="filter-evaluator" placeholder="Filter by evaluator..." class="rounded-md border-gray-300 shadow-sm">
+                    <input type="text" id="filter-location" placeholder="Filtrar por local..." class="rounded-md border-gray-300 shadow-sm">
+                    <input type="text" id="filter-evaluator" placeholder="Filtrar por avaliador..." class="rounded-md border-gray-300 shadow-sm">
                 </div>
-                <button id="apply-filters-btn" class="mt-4 btn btn-primary py-2 px-4 rounded-lg">Apply Filters</button>
-                <button id="export-filtered-excel-btn" class="mt-4 btn btn-success py-2 px-4 rounded-lg">Export Filtered (Excel)</button>
+                <button id="apply-filters-btn" class="mt-4 btn btn-primary py-2 px-4 rounded-lg">Aplicar Filtros</button>
+                <button id="export-filtered-excel-btn" class="mt-4 btn btn-success py-2 px-4 rounded-lg">Exportar Filtrados (Excel)</button>
             </div>
 
             <div class="card p-6 mb-8">
-                <h2 class="text-2xl font-bold mb-4 text-gray-700 border-b pb-2">Aggregated Graphic Analysis</h2>
+                <h2 class="text-2xl font-bold mb-4 text-gray-700 border-b pb-2">Análise Gráfica Agregada</h2>
                 <div class="h-80">
                     <canvas id="analysis-chart"></canvas>
                 </div>
             </div>
 
             <div class="card p-6">
-                <h2 class="text-2xl font-bold mb-4 text-gray-700 border-b pb-2">Assessment History</h2>
+                <h2 class="text-2xl font-bold mb-4 text-gray-700 border-b pb-2">Histórico de Avaliações</h2>
                 <div id="assessment-history-list" class="space-y-4">
-                    <p>Loading assessments...</p>
+                    <p>A carregar avaliações...</p>
                 </div>
             </div>
         </div>
@@ -217,7 +219,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         
         const CMAR_App = (() => {
             let auth, db;
@@ -227,12 +229,7 @@
             let assessmentSummaryChart = null;
             let unsubscribeFromAssessments = null;
 
-            const riskData = {
-                "Human": [ { id: "H1", text: "Experience level in the activity (Guide)" }, { id: "H2", text: "Rescue and first aid skills (Guide)" }, { id: "H3", text: "Information on safety procedures provided to participants (Guide)" }, { id: "H4", text: "Guide/participant ratio" }, { id: "H5", text: "Use of safety procedures (Guide)" }, { id: "H6", text: "Leadership and decision-making ability (Guide)" }, { id: "H7", text: "Planning and management skills (Guide)" }, { id: "H8", text: "Knowledge of the locations and their dangers (Guide)" }, { id: "H9", text: "Pedagogical and professional intervention skills (Guide)" }, { id: "H10", text: "Physical condition (Guide)" }, { id: "H11", text: "Appropriate clothing and footwear (Participant)" }, { id: "H12", text: "Experience level in the activity (Participant)" }, { id: "H13", text: "Adherence to safety procedures (Participant)" }, ],
-                "Environmental": [ { id: "A1", text: "Temperature" }, { id: "A2", text: "Extreme adverse conditions (wind, thunderstorm, snow, rain, and fog)" }, { id: "A3", text: "State of conservation of the environment" }, { id: "A4", text: "Access for rescue or other vehicles" }, { id: "A5", text: "Communications (mobile network, radio transmitters)" }, { id: "A6", text: "Difficulty of the route" }, { id: "A7", text: "Duration of the route" }, { id: "A8", text: "Water level (Canyoning only)" }, { id: "A9", text: "Type and quality of the rock (Canyoning and climbing only)" }, { id: "A10", text: "Sun exposure (Climbing only)" }, ],
-                "Materials and Equipment": [ { id: "M1", text: "Use of certified (approved) materials and equipment" }, { id: "M2", text: "Maintenance and preservation of materials and equipment" }, { id: "M3", text: "Characteristics of materials and equipment" }, { id: "M4", text: "Handling of materials and equipment" }, { id: "M5", text: "Suitability of materials and equipment to the participants' level" }, { id: "M6", text: "State of conservation of fixed equipment on the routes (Climbing only)" }, { id: "M7", text: "Performance of materials and equipment" }, ],
-                "Safety and Emergency": [ { id: "S1", text: "Communication equipment (mobile phone, radios, etc.)" }, { id: "S2", text: "First aid kit" }, { id: "S3", text: "Equipment for rescue and salvage" }, { id: "S4", text: "Survival kit (whistle, headlamps, knife, food, etc.)" }, { id: "S5", text: "Appropriate personal and collective protective equipment (PPE and CPE)" }, ]
-            };
+            const riskData = { "Humana": [ { id: "H1", text: "Nível de experiência na modalidade (Técnico)" }, { id: "H2", text: "Competências de resgate e socorrismo (Técnico)" }, { id: "H3", text: "Informações dos procedimentos de segurança aos praticantes (Técnico)" }, { id: "H4", text: "Rácio técnico/praticantes" }, { id: "H5", text: "Utilização de procedimentos de segurança (Técnico)" }, { id: "H6", text: "Capacidade de liderança e tomada de decisão (Técnico)" }, { id: "H7", text: "Competências de planeamento e gestão (Técnico)" }, { id: "H8", text: "Conhecimento dos locais de prática e dos seus perigos (Técnico)" }, { id: "H9", text: "Competências de intervenção pedagógica e profissional (Técnico)" }, { id: "H10", text: "Condição física (Técnico)" }, { id: "H11", text: "Vestuário e calçado adequado (Praticante)" }, { id: "H12", text: "Nível de experiência na modalidade (Praticante)" }, { id: "H13", text: "Conduta de procedimentos de segurança (Praticante)" }, ], "Ambiental": [ { id: "A1", text: "Temperatura" }, { id: "A2", text: "Condições adversas extremas (vento, trovoada, neve, chuva e nevoeiro)" }, { id: "A3", text: "Estado de conservação do meio ambiente" }, { id: "A4", text: "Acesso a veículos de socorro ou outros" }, { id: "A5", text: "Comunicações (rede telemóvel, rádios transmissores)" }, { id: "A6", text: "Dificuldade do percurso" }, { id: "A7", text: "Duração do percurso" }, { id: "A8", text: "Nível da água (Apenas canyoning)" }, { id: "A9", text: "Tipo e qualidade da rocha (Apenas canyoning e escalada)" }, { id: "A10", text: "Exposição solar (Apenas escalada)" }, ], "Materiais e Equipamentos": [ { id: "M1", text: "Utilização de materiais e equipamentos certificados (homologados)" }, { id: "M2", text: "Manutenção e preservação dos materiais e equipamentos" }, { id: "M3", text: "Características dos materiais e equipamentos" }, { id: "M4", text: "Manipulação dos materiais e equipamentos" }, { id: "M5", text: "Adequação dos materiais e equipamentos ao nível dos praticantes" }, { id: "M6", text: "Estado de conservação dos equipamentos fixos existentes nas vias (Apenas escalada)" }, { id: "M7", text: "Performance dos materiais e equipamentos" }, ], "Segurança e Emergência": [ { id: "S1", text: "Equipamento para comunicações (telemóvel, rádios, etc..)" }, { id: "S2", text: "Kit primeiros socorros" }, { id: "S3", text: "Equipamento para salvamento e resgate" }, { id: "S4", text: "Kit sobrevivência (apito, frontais, faca, alimentação, etc..)" }, { id: "S5", text: "Equipamento de proteção individual e coletiva (EPI e EPC adequados)" }, ] };
 
             const DOM = {};
             const elementIds = [ 'main-container', 'risk-factors-container', 'calculate-btn-assessment', 'save-assessment-btn', 'clear-btn', 'export-pdf-btn', 'export-excel-btn', 'evalDate', 'results-content-assessment', 'overall-classification', 'overall-recommendation', 'overall-treatment', 'overall-result', 'extreme-risk-summary-container', 'extreme-risk-list', 'nav-assessment', 'nav-dashboard', 'page-assessment', 'page-dashboard', 'apply-filters-btn', 'export-filtered-excel-btn', 'assessment-history-list', 'toast-notification' ];
@@ -246,10 +243,10 @@
             };
 
             const getRiskClassification = (score) => {
-                if (score >= 15) return { level: "Extreme Risk", colorClass: "risk-extreme", recommendation: "Cancel", treatment: "Activity should be canceled if the risk cannot be mitigated." };
-                if (score >= 8) return { level: "High Risk", colorClass: "risk-high", recommendation: "Alert", treatment: "You should be on alert and try to correct the identified risks." };
-                if (score >= 4) return { level: "Moderate Risk", colorClass: "risk-moderate", recommendation: "Considered", treatment: "Does not compromise the activity, but a considered approach should be taken." };
-                return { level: "Low Risk", colorClass: "risk-low", recommendation: "Recommended", treatment: "Does not compromise the activity." };
+                if (score >= 15) return { level: "Risco Extremo", colorClass: "risk-extreme", recommendation: "Cancelar", treatment: "Deve cancelar a atividade se não conseguir corrigir o risco." };
+                if (score >= 8) return { level: "Risco Elevado", colorClass: "risk-high", recommendation: "Alerta", treatment: "Deve estar em alerta e tentar corrigir os riscos identificados." };
+                if (score >= 4) return { level: "Risco Moderado", colorClass: "risk-moderate", recommendation: "Ponderada", treatment: "Não compromete a atividade, mas deve assumir uma gestão ponderada." };
+                return { level: "Risco Baixo", colorClass: "risk-low", recommendation: "Recomendada", treatment: "Não compromete a atividade." };
             };
 
             const getRiskStyleClasses = (riskColorClass) => {
@@ -282,17 +279,17 @@
                     });
                 } catch (e) {
                     console.error("Firebase initialization failed:", e);
-                    showToast("Could not connect to the database. The app will run in offline mode.", "error");
+                    showToast("Não foi possível ligar à base de dados. A app funcionará em modo offline.", "error");
                 }
             };
             
             const displayAuthError = () => {
-                const blockedReferrer = window.location.hostname || 'your current site';
-                DOM['main-container'].innerHTML = `<div class="card p-6 mb-8 bg-red-50 border border-red-200"><h2 class="text-2xl font-bold text-red-700 flex items-center gap-2"><svg class="w-8 h-8"><use xlink:href="#icon-alert-triangle"></use></svg>Database Connection Error (Access Blocked)</h2><p class="mt-4 text-red-800">Your database (Firebase) is blocking access from this site for security reasons.</p><p class="mt-4 font-bold text-red-900">To fix this, you need to authorize this site in the Google Cloud Console.</p><p class="mt-2 text-red-800">In the "Website restrictions" section of your API key, add the following address: <br> <strong class="bg-red-100 p-1 rounded font-mono text-sm">${blockedReferrer}</strong></p></div>`;
+                const blockedReferrer = window.location.hostname || 'O seu site atual';
+                DOM['main-container'].innerHTML = `<div class="card p-6 mb-8 bg-red-50 border border-red-200"><h2 class="text-2xl font-bold text-red-700 flex items-center gap-2"><svg class="w-8 h-8"><use xlink:href="#icon-alert-triangle"></use></svg>Erro de Ligação à Base de Dados (Acesso Bloqueado)</h2><p class="mt-4 text-red-800">A sua base de dados (Firebase) está a bloquear o acesso a partir deste site por segurança.</p><p class="mt-4 font-bold text-red-900">Para resolver, precisa de autorizar este site na Google Cloud Console.</p><p class="mt-2 text-red-800">Na secção "Restrições de sites" da sua chave de API, adicione o seguinte endereço: <br> <strong class="bg-red-100 p-1 rounded font-mono text-sm">${blockedReferrer}</strong></p></div>`;
             };
 
             const createRiskMatrix = (factorId) => {
-                let matrixHtml = `<div class="risk-matrix-container"><div class="axis-label">Probability</div><div class="risk-matrix" id="matrix-${factorId}" data-factor-id="${factorId}">`;
+                let matrixHtml = `<div class="risk-matrix-container"><div class="axis-label">Probabilidade</div><div class="risk-matrix" id="matrix-${factorId}" data-factor-id="${factorId}">`;
                 for (let prob = 5; prob >= 1; prob--) {
                     for (let cons = 1; cons <= 5; cons++) {
                         const score = prob * cons;
@@ -301,7 +298,7 @@
                         matrixHtml += `<div class="matrix-cell ${classification.colorClass} ${isDefault ? 'selected' : ''}" data-prob="${prob}" data-cons="${cons}" data-score="${score}" title="Prob: ${prob}, Cons: ${cons}, Score: ${score}">${score}</div>`;
                     }
                 }
-                matrixHtml += `</div><div></div><div class="consequence-labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div><div></div><div class="text-center text-xs font-semibold text-gray-600 col-span-5">Consequence</div></div>`;
+                matrixHtml += `</div><div></div><div class="consequence-labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div><div></div><div class="text-center text-xs font-semibold text-gray-600 col-span-5">Consequência</div></div>`;
                 return matrixHtml;
             };
             
@@ -320,7 +317,7 @@
                 treatmentEl.textContent = classification.treatment;
                 const badge = scoreEl.parentElement;
                 badge.className = `risk-score-badge ${styles.bg} ${styles.text}`;
-                rowEl.classList.toggle('extreme-risk-alert-row', classification.level === "Extreme Risk");
+                rowEl.classList.toggle('extreme-risk-alert-row', classification.level === "Risco Extremo");
             };
             
             const renderRiskFactors = () => {
@@ -328,7 +325,7 @@
                 Object.entries(riskData).forEach(([dimension, factors]) => {
                     const dimensionCard = document.createElement('div');
                     dimensionCard.className = 'card mb-8';
-                    dimensionCard.innerHTML = `<h2 class="text-2xl font-bold text-slate-100 bg-slate-600 p-4 border-b border-slate-700">Dimension: ${dimension}</h2><div class="p-6"><div class="space-y-6">${factors.map((factor, index) => { const defaultClassification = getRiskClassification(1); const defaultStyles = getRiskStyleClasses(defaultClassification.colorClass); const frNumber = `RF${index + 1}`; return `<div id="row-${factor.id}" data-score="1" data-dimension="${dimension}" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center p-4 rounded-lg border border-gray-200 transition-all duration-300"><div class="md:col-span-1"><p class="font-semibold text-gray-800 flex items-start gap-2"><svg class="w-5 h-5 extreme-risk-icon flex-shrink-0 mt-1"><use xlink:href="#icon-alert-triangle"></use></svg><span class="font-bold text-gray-500 w-12 flex-shrink-0">${frNumber}:</span><span id="text-${factor.id}">${factor.text}</span></p></div><div class="md:col-span-1 flex justify-center">${createRiskMatrix(factor.id)}</div><div class="md:col-span-1 flex flex-col items-center justify-center text-center"><div class="risk-score-badge ${defaultStyles.bg} ${defaultStyles.text}"><span id="score-${factor.id}">1</span></div><span id="class-${factor.id}" class="text-lg font-bold text-gray-800 mt-2">${defaultClassification.level}</span><div class="text-xs text-left mt-2 p-2 bg-gray-50 rounded-md border w-full"><p><strong class="text-gray-600">Recommendation:</strong> <span id="rec-${factor.id}">${defaultClassification.recommendation}</span></p><p class="mt-1"><strong class="text-gray-600">Treatment:</strong> <span id="treat-${factor.id}">${defaultClassification.treatment}</span></p></div></div></div>`; }).join('')}</div></div>`;
+                    dimensionCard.innerHTML = `<h2 class="text-2xl font-bold text-slate-100 bg-slate-600 p-4 border-b border-slate-700">Dimensão: ${dimension}</h2><div class="p-6"><div class="space-y-6">${factors.map((factor, index) => { const defaultClassification = getRiskClassification(1); const defaultStyles = getRiskStyleClasses(defaultClassification.colorClass); const frNumber = `FR${index + 1}`; return `<div id="row-${factor.id}" data-score="1" data-dimension="${dimension}" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center p-4 rounded-lg border border-gray-200 transition-all duration-300"><div class="md:col-span-1"><p class="font-semibold text-gray-800 flex items-start gap-2"><svg class="w-5 h-5 extreme-risk-icon flex-shrink-0 mt-1"><use xlink:href="#icon-alert-triangle"></use></svg><span class="font-bold text-gray-500 w-12 flex-shrink-0">${frNumber}:</span><span id="text-${factor.id}">${factor.text}</span></p></div><div class="md:col-span-1 flex justify-center">${createRiskMatrix(factor.id)}</div><div class="md:col-span-1 flex flex-col items-center justify-center text-center"><div class="risk-score-badge ${defaultStyles.bg} ${defaultStyles.text}"><span id="score-${factor.id}">1</span></div><span id="class-${factor.id}" class="text-lg font-bold text-gray-800 mt-2">${defaultClassification.level}</span><div class="text-xs text-left mt-2 p-2 bg-gray-50 rounded-md border w-full"><p><strong class="text-gray-600">Recomendação:</strong> <span id="rec-${factor.id}">${defaultClassification.recommendation}</span></p><p class="mt-1"><strong class="text-gray-600">Tratamento:</strong> <span id="treat-${factor.id}">${defaultClassification.treatment}</span></p></div></div></div>`; }).join('')}</div></div>`;
                     fragment.appendChild(dimensionCard);
                 });
                 DOM['risk-factors-container'].appendChild(fragment);
@@ -351,7 +348,7 @@
             const calculateAndShowResults = () => {
                 let highestRiskScore = 0;
                 const extremeRiskFactors = [];
-                const dimensionRiskCounts = Object.keys(riskData).reduce((acc, dim) => { acc[dim] = { "Low Risk": 0, "Moderate Risk": 0, "High Risk": 0, "Extreme Risk": 0 }; return acc; }, {});
+                const dimensionRiskCounts = Object.keys(riskData).reduce((acc, dim) => { acc[dim] = { "Risco Baixo": 0, "Risco Moderado": 0, "Risco Elevado": 0, "Risco Extremo": 0 }; return acc; }, {});
 
                 document.querySelectorAll('[id^="row-"]').forEach(row => {
                     const score = parseInt(row.dataset.score, 10);
@@ -359,7 +356,7 @@
                     const classification = getRiskClassification(score);
                     const dimension = row.dataset.dimension;
                     if (dimensionRiskCounts[dimension]) { dimensionRiskCounts[dimension][classification.level]++; }
-                    if (classification.level === "Extreme Risk") {
+                    if (classification.level === "Risco Extremo") {
                         const factorId = row.id.split('-')[1];
                         const factorText = document.getElementById(`text-${factorId}`).textContent;
                         const frNumber = row.querySelector('.font-bold.text-gray-500').textContent;
@@ -368,7 +365,7 @@
                 });
 
                 if (extremeRiskFactors.length > 0) {
-                    DOM['extreme-risk-list'].innerHTML = `<p class="font-bold text-lg mb-2 text-center">Final Recommendation: Cancel Activity</p><p class="text-sm mb-2">The following risk factors were identified as extreme:</p><ul>${extremeRiskFactors.map(text => `<li class="mt-1 ml-4 list-disc">${text}</li>`).join('')}</ul>`;
+                    DOM['extreme-risk-list'].innerHTML = `<p class="font-bold text-lg mb-2 text-center">Recomendação Final: Cancelar Atividade</p><p class="text-sm mb-2">Os seguintes fatores de risco foram identificados como extremos:</p><ul>${extremeRiskFactors.map(text => `<li class="mt-1 ml-4 list-disc">${text}</li>`).join('')}</ul>`;
                     DOM['extreme-risk-summary-container'].classList.remove('hidden');
                 } else {
                     DOM['extreme-risk-summary-container'].classList.add('hidden');
@@ -389,22 +386,22 @@
             const updateAssessmentSummaryChart = (dimensionRiskCounts) => {
                 const ctx = document.getElementById('assessment-summary-chart').getContext('2d');
                 const labels = Object.keys(dimensionRiskCounts);
-                const riskLevels = ["Low Risk", "Moderate Risk", "High Risk", "Extreme Risk"];
+                const riskLevels = ["Risco Baixo", "Risco Moderado", "Risco Elevado", "Risco Extremo"];
                 const colors = ['#22c55e', '#facc15', '#f97316', '#ef4444'];
                 const datasets = riskLevels.map((level, index) => ({ label: level, data: labels.map(dim => dimensionRiskCounts[dim][level]), backgroundColor: colors[index], }));
 
                 if (assessmentSummaryChart) assessmentSummaryChart.destroy();
-                assessmentSummaryChart = new Chart(ctx, { type: 'bar', data: { labels, datasets }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: false }, y: { stacked: false, beginAtZero: true, title: { display: true, text: 'No. of Risk Factors' }, ticks: { stepSize: 1 } } }, plugins: { legend: { display: true, position: 'bottom' } } } });
+                assessmentSummaryChart = new Chart(ctx, { type: 'bar', data: { labels, datasets }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: false }, y: { stacked: false, beginAtZero: true, title: { display: true, text: 'Nº de Fatores de Risco' }, ticks: { stepSize: 1 } } }, plugins: { legend: { display: true, position: 'bottom' } } } });
             };
 
             const saveAssessment = async () => {
                 if (!db || !auth.currentUser) {
-                    showToast("Database connection is not available.", 'error');
+                    showToast("A ligação à base de dados não está disponível.", 'error');
                     return;
                 }
                 const generalInfo = { evaluatorName: document.getElementById('evaluatorName').value.trim(), evalDate: DOM['evalDate'].value, location: document.getElementById('location').value.trim(), activity: document.getElementById('activity').value.trim(), };
                 if (Object.values(generalInfo).some(val => !val)) {
-                    showToast("Please fill in all the assessment information.", 'warning');
+                    showToast("Por favor, preencha todas as informações da avaliação.", 'warning');
                     return;
                 }
 
@@ -420,13 +417,13 @@
                 const assessmentData = { ...generalInfo, userId: auth.currentUser.uid, createdAt: new Date().toISOString(), overallRiskLevel: overallClassification.level, overallRecommendation: overallClassification.recommendation, factors: evaluatedFactors, };
                 
                 try {
-                    const appId = window.__app_id || 'default-app-id';
-                    const docRef = await addDoc(collection(db, `artifacts/${appId}/public/data/cmar_assessments`), assessmentData);
+                    // FIX: Simplified collection path
+                    const docRef = await addDoc(collection(db, 'cmar_assessments_public'), assessmentData);
                     console.log("Document written with ID: ", docRef.id);
-                    showToast("Assessment saved successfully!", 'success');
+                    showToast("Avaliação guardada com sucesso!", 'success');
                 } catch (error) {
                     console.error("Error adding document: ", error);
-                    showToast("Error saving assessment. Please try again.", 'error');
+                    showToast("Erro ao guardar a avaliação. Tente novamente.", 'error');
                 }
             };
             
@@ -451,17 +448,18 @@
             const loadAssessments = () => {
                 if (!db) return;
                 if (unsubscribeFromAssessments) unsubscribeFromAssessments();
-                const appId = window.__app_id || 'default-app-id';
-                const q = query(collection(db, `artifacts/${appId}/public/data/cmar_assessments`));
+                 // FIX: Simplified collection path and added orderBy
+                const q = query(collection(db, 'cmar_assessments_public'), orderBy("createdAt", "desc"));
                 
                 unsubscribeFromAssessments = onSnapshot(q, (querySnapshot) => {
                     const assessments = [];
                     querySnapshot.forEach((doc) => { assessments.push({ id: doc.id, ...doc.data() }); });
-                    allAssessments = assessments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    // Sorting is now handled by the query, but a client-side sort is a good fallback
+                    allAssessments = assessments;
                     applyFilters();
                 }, (error) => {
                     console.error("Error loading assessments: ", error);
-                    DOM['assessment-history-list'].innerHTML = '<p class="text-red-500">Error loading assessments.</p>';
+                    DOM['assessment-history-list'].innerHTML = '<p class="text-red-500">Erro ao carregar as avaliações. Verifique as regras de segurança da base de dados.</p>';
                 });
             };
 
@@ -477,24 +475,24 @@
             };
 
             const renderHistoryList = (assessments) => {
-                 if (assessments.length === 0) { DOM['assessment-history-list'].innerHTML = '<p>No assessments found for the selected filters.</p>'; return; }
+                 if (assessments.length === 0) { DOM['assessment-history-list'].innerHTML = '<p>Nenhuma avaliação encontrada para os filtros selecionados.</p>'; return; }
                 DOM['assessment-history-list'].innerHTML = assessments.map(item => {
                     const classification = getRiskClassification(Math.max(...item.factors.map(f => f.score)));
                     const styles = getRiskStyleClasses(classification.colorClass);
-                    return `<div class="border rounded-lg p-4 flex justify-between items-center"><div><p class="font-bold">${item.activity} in ${item.location}</p><p class="text-sm text-gray-600">Evaluator: ${item.evaluatorName} on ${new Date(item.evalDate).toLocaleDateString('en-US')}</p></div><div class="text-right"><span class="px-3 py-1 text-sm font-semibold ${styles.bg} ${styles.text} rounded-full">${classification.level}</span></div></div>`;
+                    return `<div class="border rounded-lg p-4 flex justify-between items-center"><div><p class="font-bold">${item.activity} em ${item.location}</p><p class="text-sm text-gray-600">Avaliador: ${item.evaluatorName} em ${new Date(item.evalDate).toLocaleDateString('pt-PT')}</p></div><div class="text-right"><span class="px-3 py-1 text-sm font-semibold ${styles.bg} ${styles.text} rounded-full">${classification.level}</span></div></div>`;
                 }).join('');
             };
             
             const updateAnalysisChart = (filteredData) => {
                 const ctx = document.getElementById('analysis-chart').getContext('2d');
-                const riskCounts = { "Low Risk": 0, "Moderate Risk": 0, "High Risk": 0, "Extreme Risk": 0 };
+                const riskCounts = { "Risco Baixo": 0, "Risco Moderado": 0, "Risco Elevado": 0, "Risco Extremo": 0 };
                 filteredData.forEach(assessment => { assessment.factors.forEach(factor => { const classification = getRiskClassification(factor.score); riskCounts[classification.level]++; }); });
                 if (analysisChart) analysisChart.destroy();
-                analysisChart = new Chart(ctx, { type: 'bar', data: { labels: Object.keys(riskCounts), datasets: [{ label: 'Total No. of Factors by Risk Level', data: Object.values(riskCounts), backgroundColor: ['#22c55e', '#facc15', '#f97316', '#ef4444'], }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }, plugins: { legend: { display: false } } } });
+                analysisChart = new Chart(ctx, { type: 'bar', data: { labels: Object.keys(riskCounts), datasets: [{ label: 'Nº Total de Fatores por Nível de Risco', data: Object.values(riskCounts), backgroundColor: ['#22c55e', '#facc15', '#f97316', '#ef4444'], }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }, plugins: { legend: { display: false } } } });
             };
 
             const exportToPDF = () => {
-                 if (DOM['results-content-assessment'].classList.contains('hidden')) { showToast("Calculate results before exporting.", 'warning'); return; }
+                 if (DOM['results-content-assessment'].classList.contains('hidden')) { showToast("Calcule os resultados antes de exportar.", 'warning'); return; }
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF('p', 'mm', 'a4');
                 const content = DOM['page-assessment'];
@@ -514,7 +512,7 @@
                         pdf.addImage(imgData, 'PNG', 0, -pageHeight * (Math.floor(imgHeight / pageHeight) - Math.floor(heightLeft / pageHeight)), pdfWidth, imgHeight);
                         heightLeft -= pageHeight;
                     }
-                    pdf.save(`CMAR_Assessment_${new Date().toISOString().slice(0,10)}.pdf`);
+                    pdf.save(`CMAR_Avaliacao_${new Date().toISOString().slice(0,10)}.pdf`);
                 }).catch(err => {
                     console.error("PDF export failed:", err);
                     content.querySelectorAll('button').forEach(btn => btn.style.display = '');
@@ -522,36 +520,36 @@
             };
             
             const exportSingleAssessmentToExcel = () => {
-                if (DOM['results-content-assessment'].classList.contains('hidden')) { showToast("Calculate results before exporting.", 'warning'); return; }
-                const generalInfo = { Evaluator: document.getElementById('evaluatorName').value, Date: DOM['evalDate'].value, Location: document.getElementById('location').value, Activity: document.getElementById('activity').value, };
+                if (DOM['results-content-assessment'].classList.contains('hidden')) { showToast("Calcule os resultados antes de exportar.", 'warning'); return; }
+                const generalInfo = { Avaliador: document.getElementById('evaluatorName').value, Data: DOM['evalDate'].value, Local: document.getElementById('location').value, Atividade: document.getElementById('activity').value, };
                 const dataToExport = [];
-                Object.entries(generalInfo).forEach(([key, value]) => dataToExport.push({ Category: key, Detail: value }));
+                Object.entries(generalInfo).forEach(([key, value]) => dataToExport.push({ Categoria: key, Detalhe: value }));
                 dataToExport.push({});
-                dataToExport.push({ Category: 'Dimension', Detail: 'Risk Factor', 'Score': 'Score', 'Risk Level': 'Risk Level' });
+                dataToExport.push({ Categoria: 'Dimensão', Detalhe: 'Fator de Risco', 'Score': 'Score', 'Nível de Risco': 'Nível de Risco' });
                 document.querySelectorAll('[id^="row-"]').forEach(row => {
                     const factorId = row.id.split('-')[1];
                     const text = document.getElementById(`text-${factorId}`).textContent;
                     const score = row.dataset.score;
                     const level = getRiskClassification(parseInt(score)).level;
-                    dataToExport.push({ Category: row.dataset.dimension, Detail: text, 'Score': score, 'Risk Level': level });
+                    dataToExport.push({ Categoria: row.dataset.dimension, Detalhe: text, 'Score': score, 'Nível de Risco': level });
                 });
                 const worksheet = XLSX.utils.json_to_sheet(dataToExport, { skipHeader: true });
                 const workbook = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(workbook, worksheet, "CMAR Assessment");
-                XLSX.writeFile(workbook, `CMAR_Assessment_${generalInfo.Date || 'single'}.xlsx`);
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Avaliação CMAR");
+                XLSX.writeFile(workbook, `CMAR_Avaliacao_${generalInfo.Data || 'single'}.xlsx`);
             };
 
             const exportFilteredAssessmentsToExcel = () => {
-                if (filteredAssessments.length === 0) { showToast("No filtered data to export.", 'warning'); return; }
-                const summaryData = filteredAssessments.map(item => ({ 'Date': item.evalDate, 'Evaluator': item.evaluatorName, 'Location': item.location, 'Activity': item.activity, 'Overall Risk Level': item.overallRiskLevel, 'Recommendation': item.overallRecommendation }));
+                if (filteredAssessments.length === 0) { showToast("Não há dados filtrados para exportar.", 'warning'); return; }
+                const summaryData = filteredAssessments.map(item => ({ 'Data': item.evalDate, 'Avaliador': item.evaluatorName, 'Local': item.location, 'Atividade': item.activity, 'Nível de Risco Geral': item.overallRiskLevel, 'Recomendação': item.overallRecommendation }));
                 const summarySheet = XLSX.utils.json_to_sheet(summaryData);
                 const detailedData = [];
-                filteredAssessments.forEach((item, index) => { item.factors.forEach(factor => { detailedData.push({ 'Assessment ID': index + 1, 'Date': item.evalDate, 'Evaluator': item.evaluatorName, 'Location': item.location, 'Activity': item.activity, 'Dimension': factor.dimension, 'Risk Factor': factor.text, 'Score': factor.score, 'Risk Level': getRiskClassification(factor.score).level }); }); });
+                filteredAssessments.forEach((item, index) => { item.factors.forEach(factor => { detailedData.push({ 'ID Avaliação': index + 1, 'Data': item.evalDate, 'Avaliador': item.evaluatorName, 'Local': item.location, 'Atividade': item.activity, 'Dimensão': factor.dimension, 'Fator de Risco': factor.text, 'Score': factor.score, 'Nível de Risco': getRiskClassification(factor.score).level }); }); });
                 const detailedSheet = XLSX.utils.json_to_sheet(detailedData);
                 const workbook = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(workbook, summarySheet, "Summary");
-                XLSX.utils.book_append_sheet(workbook, detailedSheet, "Full Data");
-                XLSX.writeFile(workbook, `CMAR_Filtered_Export_${new Date().toISOString().slice(0,10)}.xlsx`);
+                XLSX.utils.book_append_sheet(workbook, summarySheet, "Resumo");
+                XLSX.utils.book_append_sheet(workbook, detailedSheet, "Dados Completos");
+                XLSX.writeFile(workbook, `CMAR_Export_Filtrado_${new Date().toISOString().slice(0,10)}.xlsx`);
             };
 
             const switchPage = (pageToShow) => {
@@ -588,3 +586,4 @@
     </script>
 </body>
 </html>
+
